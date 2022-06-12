@@ -1,0 +1,8 @@
+.openapi-generator-ignore
+Apis/AboutControllerApi.md
+Apis/ReservationControllerApi.md
+Models/EditReservationRequest.md
+Models/LocalTime.md
+Models/ReservationInfo.md
+Models/ReservationRequest.md
+README.md

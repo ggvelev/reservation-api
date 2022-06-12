@@ -1,0 +1,1 @@
+INSERT INTO RESERVATION (name, date, time, people) VALUES ('Tech dinner with colleagues', '2022-06-06', '15:45:45', 5);

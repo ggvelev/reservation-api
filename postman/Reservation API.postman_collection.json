@@ -1,0 +1,379 @@
+{
+	"info": {
+		"_postman_id": "a53e4dcd-5b2d-4199-bc45-291c0b957243",
+		"name": "Reservation API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "About Info",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.test(\"Body is correct\", function () {\r",
+							"        pm.response.to.have.body({\r",
+							"            \"description\": \"RESTaurant reservation API server.\",\r",
+							"            \"version\": \"v0.0.1\",\r",
+							"            \"author\": \"Georgi Velev\",\r",
+							"            \"apiDocsUrl\": \"http://localhost:8080/api-docs\",\r",
+							"            \"swaggerUiUrl\": \"http://localhost:8080/swagger-ui.html\"\r",
+							"        });\r",
+							"    });\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{api-base}}/about",
+					"host": [
+						"{{api-base}}"
+					],
+					"path": [
+						"about"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all reservations",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Body contains a specific reservation\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"For Ivan's colleagues\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{api-base}}/reservations",
+					"host": [
+						"{{api-base}}"
+					],
+					"path": [
+						"reservations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all reservations unauthorized",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 403 Forbidden\", function () {\r",
+							"    pm.response.to.have.status(403);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "user",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "locked-user",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{api-base}}/reservations",
+					"host": [
+						"{{api-base}}"
+					],
+					"path": [
+						"reservations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all reservations unauthenticated",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 401 Unauthorized\", function () {\r",
+							"    pm.response.to.have.status(401);\r",
+							"});\r",
+							"pm.test(\"Check WWW-Authenticate header is present\", function () {\r",
+							"    pm.response.to.have.header(\"WWW-Authenticate\", 'Basic realm=\"reservations\"');\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{api-base}}/reservations",
+					"host": [
+						"{{api-base}}"
+					],
+					"path": [
+						"reservations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Query reservations",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Has reservation for Ivan and friends\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData[0].name).to.eql(\"For Ivan's colleagues\");\r",
+							"});\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{api-base}}/reservations?name=Ivan",
+					"host": [
+						"{{api-base}}"
+					],
+					"path": [
+						"reservations"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "Ivan"
+						},
+						{
+							"key": "time",
+							"value": "15:16",
+							"disabled": true
+						},
+						{
+							"key": "date",
+							"value": "2022-06-17",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create reservation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"pm.test(\"Verify response created and resource accessible\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.name).to.eql(\"For papa and friends\");\r",
+							"    \r",
+							"    var resourceLocation = pm.response.headers.filter(h => h.key === \"Location\")[0].value;\r",
+							"\r",
+							"    pm.sendRequest(resourceLocation, function (err, response) {\r",
+							"        console.log(pm.response.json());\r",
+							"        var body = pm.response.json();\r",
+							"        pm.test(\"Body is correct\", function () {\r",
+							"            pm.expect(body).to.eql(jsonData);\r",
+							"        });\r",
+							"    });\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"For papa and friends\",\r\n    \"date\": \"2022-08-14\",\r\n    \"time\": \"18:30:59\",\r\n    \"people\": \"14\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api-base}}/reservations",
+					"host": [
+						"{{api-base}}"
+					],
+					"path": [
+						"reservations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get by ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{api-base}}/reservations/3",
+					"host": [
+						"{{api-base}}"
+					],
+					"path": [
+						"reservations",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit reservation",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"brlllq\",\r\n    \"date\": \"2033-04-25\",\r\n    \"time\": \"13:37\",\r\n    \"people\": 42\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api-base}}/reservations/3",
+					"host": [
+						"{{api-base}}"
+					],
+					"path": [
+						"reservations",
+						"3"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "password",
+				"value": "user",
+				"type": "string"
+			},
+			{
+				"key": "username",
+				"value": "user",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "api-base",
+			"value": "http://localhost:8080/api",
+			"type": "default"
+		}
+	]
+}
